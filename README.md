@@ -58,6 +58,7 @@ Most playbook tools are either too generic or too static. This app is built for 
 
 - Publish the current playbook to a separate viewer page
 - Protect editor and viewer with different passwords
+- Run the editor and viewer on separate ports
 - Give players a clean read-only interface instead of the full editor
 
 ### Print install-ready sheets
@@ -98,8 +99,8 @@ npm start
 
 Open:
 
-- Editor: `http://localhost:3000/editor`
-- Viewer: `http://localhost:3000/viewer`
+- Editor: `http://localhost:3000`
+- Viewer: `http://localhost:3001`
 
 Set these before real use:
 
@@ -145,7 +146,7 @@ More setup detail is in [SETUP.md](./SETUP.md).
 
 - The working playbook is stored in `playbook.db`
 - Published versions are stored separately and shown in the viewer
-- If `certs/cert.pem` and `certs/key.pem` exist, the app also serves HTTPS
+- By default the editor runs on port `3000` and the viewer runs on port `3001`
 
 ## Good Fit If You Want To
 

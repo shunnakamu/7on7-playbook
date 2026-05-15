@@ -2,11 +2,10 @@ services:
   playbook:
     build: .
     ports:
-      - "${HTTPS_PORT:-3443}:${HTTPS_PORT:-3443}"
-      - "${HTTP_PORT:-3000}:${HTTP_PORT:-3000}"
+      - "${EDITOR_PORT:-3000}:${EDITOR_PORT:-3000}"
+      - "${VIEWER_PORT:-3001}:${VIEWER_PORT:-3001}"
     volumes:
       - ./playbook.db:/app/data/playbook.db
-      - ./certs:/app/certs:ro
     env_file:
       - .env
     environment:

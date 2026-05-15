@@ -1,7 +1,6 @@
 node_modules/
 .env
 backups/
-certs/*.pem
 tools/token_sheets.json
 tools/client_secret.json
 playbook.db-shm
