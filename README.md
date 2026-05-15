@@ -1,55 +1,92 @@
 # 7on7 Playbook
 
-7-on-7 のオフェンスとディフェンスを、フィールド上でそのまま設計できるプレーブックエディタです。  
-ルート作成、モーション、守備ゾーン設計、印刷、共有用 viewer 公開までをひとつのアプリで回せます。
+<p align="center">
+  Design offense and defense installs on a real field, publish a read-only viewer, and print clean play sheets from one app.
+</p>
 
-## Screenshots
+<p align="center">
+  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-20%2B-43853d?style=flat-square">
+  <img alt="Express" src="https://img.shields.io/badge/Express-4.x-222222?style=flat-square">
+  <img alt="SQLite" src="https://img.shields.io/badge/SQLite-better--sqlite3-0f80cc?style=flat-square">
+  <img alt="Frontend" src="https://img.shields.io/badge/Frontend-Vanilla%20JS-ffca28?style=flat-square">
+  <img alt="Canvas" src="https://img.shields.io/badge/Rendering-HTML5%20Canvas-ef5350?style=flat-square">
+</p>
 
-### Offense editor
+7on7 Playbook is a browser-based coaching tool for building passing game installs, defensive calls, and player-facing viewer pages without switching between whiteboards, slides, and PDFs.
 
-プレーをフォーメーションごとに管理しながら、各レシーバーのルートとモーションを描けます。
+## Why This Exists
 
-![Offense editor](docs/screenshots/editor-offense.png)
+Most playbook tools are either too generic or too static. This app is built for the actual coaching loop:
 
-### Defense editor
+- sketch a concept on the field
+- duplicate it into variations
+- organize it by formation
+- publish a viewer version for players
+- print install sheets when you need paper
 
-守備フロントとカバレッジを切り替えながら、ゾーン責任をそのまま可視化できます。
+## At a Glance
 
-![Defense editor](docs/screenshots/editor-defense.png)
+<p align="center">
+  <img src="docs/screenshots/editor-offense.png" alt="Offense editor" width="88%">
+</p>
 
-### Viewer
+<p align="center">
+  <img src="docs/screenshots/editor-defense.png" alt="Defense editor" width="88%">
+</p>
 
-公開済みプレーブックは read-only viewer で配布できます。選手や保護者には編集権限を渡さずに見せる運用向きです。
-
-![Viewer](docs/screenshots/viewer.png)
+<p align="center">
+  <img src="docs/screenshots/viewer.png" alt="Published viewer" width="88%">
+</p>
 
 ## What You Can Do
 
-- オフェンスのプレーを作る  
-  選手配置、ルート、モーション、カーブ付きルート、プレー名管理ができます。
-- ディフェンスのプレーを作る  
-  4-2-1 などの守備配置、Cover 1/2/3/4/6 のプリセット、個別ゾーン調整に対応しています。
-- フォーメーションをテンプレート化する  
-  よく使う配置を保存し、別プレーへ再利用できます。
-- プレーをグループで整理する  
-  サイドバーでフォーメーション単位にまとまり、オフェンスとディフェンスを切り替えて管理できます。
-- viewer 用に公開する  
-  editor 側で `Publish` すると、viewer 側に最新の公開版を出せます。
-- 印刷する  
-  プレーブックを印刷用レイアウトで出力できます。
-- URL 共有する  
-  editor の `Share` で URL ベースの共有もできます。
+### Build offensive plays
 
-## Typical Workflow
+- Place players directly on the field
+- Draw routes, motion, and curved stems
+- Save and reuse custom formations
+- Split formations into sub-groups for alternate personnel looks
 
-1. editor にログインしてプレーを作る
-2. オフェンス側でルートとモーションを設計する
-3. ディフェンス側でフロントとカバレッジを詰める
-4. 必要ならフォーメーションを保存して他プレーへ流用する
-5. `Publish` して viewer に公開する
-6. viewer を見せるか、`Print` で紙に出す
+### Build defensive calls
+
+- Switch into a dedicated defense workspace
+- Start from fronts like `4-2-1`
+- Apply coverage presets such as Cover 1, 2, 3, 4, and 6
+- Adjust individual zone assignments visually on the field
+
+### Share without giving edit access
+
+- Publish the current playbook to a separate viewer page
+- Protect editor and viewer with different passwords
+- Give players a clean read-only interface instead of the full editor
+
+### Print install-ready sheets
+
+- Print grouped play sheets directly from the browser
+- Keep offense and defense separated for cleaner handouts
+
+## Typical Coaching Workflow
+
+1. Create a formation and build the base concept.
+2. Duplicate the play into tags, beaters, or formation-adjusted variants.
+3. Flip to defense and build the matching coverage or install note.
+4. Publish the latest version for players in the viewer.
+5. Print for practice or game-day wristband prep.
+
+## Feature Highlights
+
+| Area | What it gives you |
+| --- | --- |
+| Offense editor | Route drawing, motion, formations, duplicate/delete, play grouping |
+| Defense editor | Coverage presets, zone overlays, defender assignments |
+| Viewer | Read-only published version for players and assistants |
+| Sharing | URL sharing from the editor plus publish-to-viewer workflow |
+| Output | Browser print layout for install sheets |
+| Storage | Local SQLite database via `playbook.db` |
 
 ## Quick Start
+
+### Local
 
 ```bash
 git clone https://github.com/shunnakamu/7on7-playbook.git
@@ -59,31 +96,60 @@ npm install
 npm start
 ```
 
-起動後:
+Open:
 
 - Editor: `http://localhost:20011/editor`
 - Viewer: `http://localhost:20011/viewer`
 
-`.env` では最低限この2つを変えてください。
+Set these before real use:
 
 - `EDITOR_PASSWORD`
 - `VIEWER_PASSWORD`
 
-詳しいセットアップは [SETUP.md](./SETUP.md) を参照してください。
+### Docker
+
+```bash
+copy .env.example .env
+docker compose up -d --build
+```
+
+More setup detail is in [SETUP.md](./SETUP.md).
 
 ## Main Controls
 
-- `Move`: 選手やウェイポイントの移動
-- `Route`: 通常ルート作成
-- `Motion`: モーション作成
-- `Zone`: 守備ゾーン割り当て
-- `Swap`: オフェンス選手の位置入れ替え
-- `Publish`: viewer 向け公開
-- `Share`: URL 共有
-- `Print`: 印刷用出力
+| Control | Purpose |
+| --- | --- |
+| `Move` | Reposition players and route waypoints |
+| `Route` | Draw standard route segments |
+| `Motion` | Draw pre-snap motion segments |
+| `Zone` | Assign defensive zone responsibility |
+| `Swap` | Swap offensive player positions |
+| `Publish` | Push the current playbook to the viewer |
+| `Share` | Generate a shareable editor URL |
+| `Print` | Output print-friendly sheets |
 
-## Storage
+## Keyboard Shortcuts
 
-- プレーブック本体は `playbook.db` に保存されます
-- viewer は公開済みバージョンを表示します
-- HTTPS 用の `certs/cert.pem` と `certs/key.pem` があれば HTTPS でも起動します
+| Key | Action |
+| --- | --- |
+| `M` | Move mode |
+| `R` | Route mode |
+| `T` | Motion mode |
+| `E` | Eraser mode |
+| `Z` | Zone mode |
+| `S` | Swap mode |
+| `Space` | Start or stop animation |
+| `Delete` | Delete hovered route |
+
+## Storage and Publishing
+
+- The working playbook is stored in `playbook.db`
+- Published versions are stored separately and shown in the viewer
+- If `certs/cert.pem` and `certs/key.pem` exist, the app also serves HTTPS
+
+## Good Fit If You Want To
+
+- install a 7-on-7 passing concept library
+- keep offense and defense installs in one place
+- publish a simplified viewer for players
+- print play sheets without rebuilding diagrams in slides
