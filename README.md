@@ -1,87 +1,89 @@
 # 7on7 Playbook
 
-A web app for building and sharing 7-on-7 football playbooks.
-
-This public repo is a sanitized copy of the original coaching tool. It keeps the playbook editor, defense designer, print flow, and password-protected viewer, while removing roster files, contact data, private deployment scripts, and auth secrets.
-
-## What It Does
-
-- Draw offensive plays with routes, motion, and custom formations
-- Design defensive calls with coverage zones and defender assignments
-- Organize plays by formation in a sidebar
-- Publish the current playbook to a read-only viewer
-- Print grouped play sheets from the browser
-- Persist data in a local SQLite database
+7-on-7 のオフェンスとディフェンスを、フィールド上でそのまま設計できるプレーブックエディタです。  
+ルート作成、モーション、守備ゾーン設計、印刷、共有用 viewer 公開までをひとつのアプリで回せます。
 
 ## Screenshots
 
-| Editor: offense play design | Editor: defense coverage design |
-| --- | --- |
-| ![Offense editor](docs/screenshots/editor-offense.png) | ![Defense editor](docs/screenshots/editor-defense.png) |
-
-![Published viewer](docs/screenshots/viewer.png)
-
-## Main Features
-
 ### Offense editor
 
-- Drag players onto the field and draw routes directly on canvas
-- Mix route and motion segments in the same play
-- Save custom formations and reuse them across plays
-- Split formations into groups for alternate personnel packages
+プレーをフォーメーションごとに管理しながら、各レシーバーのルートとモーションを描けます。
+
+![Offense editor](docs/screenshots/editor-offense.png)
 
 ### Defense editor
 
-- Switch to a dedicated defense view
-- Start from preset fronts such as `4-2-1`
-- Assign coverage zones to defenders and visualize spacing on the field
+守備フロントとカバレッジを切り替えながら、ゾーン責任をそのまま可視化できます。
 
-### Publish and share
+![Defense editor](docs/screenshots/editor-defense.png)
 
-- Save a snapshot of the current playbook into the viewer database
-- Let players or coaches open a separate read-only viewer page
-- Keep editor and viewer behind separate passwords
+### Viewer
 
-### Print workflow
+公開済みプレーブックは read-only viewer で配布できます。選手や保護者には編集権限を渡さずに見せる運用向きです。
 
-- Print offense or defense installs from the browser
-- Group plays by formation for easier handouts
+![Viewer](docs/screenshots/viewer.png)
+
+## What You Can Do
+
+- オフェンスのプレーを作る  
+  選手配置、ルート、モーション、カーブ付きルート、プレー名管理ができます。
+- ディフェンスのプレーを作る  
+  4-2-1 などの守備配置、Cover 1/2/3/4/6 のプリセット、個別ゾーン調整に対応しています。
+- フォーメーションをテンプレート化する  
+  よく使う配置を保存し、別プレーへ再利用できます。
+- プレーをグループで整理する  
+  サイドバーでフォーメーション単位にまとまり、オフェンスとディフェンスを切り替えて管理できます。
+- viewer 用に公開する  
+  editor 側で `Publish` すると、viewer 側に最新の公開版を出せます。
+- 印刷する  
+  プレーブックを印刷用レイアウトで出力できます。
+- URL 共有する  
+  editor の `Share` で URL ベースの共有もできます。
+
+## Typical Workflow
+
+1. editor にログインしてプレーを作る
+2. オフェンス側でルートとモーションを設計する
+3. ディフェンス側でフロントとカバレッジを詰める
+4. 必要ならフォーメーションを保存して他プレーへ流用する
+5. `Publish` して viewer に公開する
+6. viewer を見せるか、`Print` で紙に出す
 
 ## Quick Start
 
 ```bash
+git clone https://github.com/shunnakamu/7on7-playbook.git
+cd 7on7-playbook
+copy .env.example .env
 npm install
 npm start
 ```
 
-Copy `.env.example` to `.env`, then set `VIEWER_PASSWORD` and `EDITOR_PASSWORD`.
-
-Then open:
+起動後:
 
 - Editor: `http://localhost:20011/editor`
 - Viewer: `http://localhost:20011/viewer`
 
-Full setup details are in [SETUP.md](./SETUP.md).
+`.env` では最低限この2つを変えてください。
 
-## Repository Scope
+- `EDITOR_PASSWORD`
+- `VIEWER_PASSWORD`
 
-Included:
+詳しいセットアップは [SETUP.md](./SETUP.md) を参照してください。
 
-- The web app runtime
-- A starter `playbook.db` with playbook data only
-- Docker support
+## Main Controls
 
-Removed from the public copy:
+- `Move`: 選手やウェイポイントの移動
+- `Route`: 通常ルート作成
+- `Motion`: モーション作成
+- `Zone`: 守備ゾーン割り当て
+- `Swap`: オフェンス選手の位置入れ替え
+- `Publish`: viewer 向け公開
+- `Share`: URL 共有
+- `Print`: 印刷用出力
 
-- Real roster or contact data
-- Google Sheets sync tooling
-- Private TLS keys
-- Personal deployment and remote access scripts
+## Storage
 
-## Stack
-
-- Node.js
-- Express
-- SQLite via `better-sqlite3`
-- Vanilla JavaScript
-- HTML5 Canvas
+- プレーブック本体は `playbook.db` に保存されます
+- viewer は公開済みバージョンを表示します
+- HTTPS 用の `certs/cert.pem` と `certs/key.pem` があれば HTTPS でも起動します
