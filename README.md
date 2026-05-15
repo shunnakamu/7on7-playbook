@@ -98,8 +98,8 @@ npm start
 
 Open:
 
-- Editor: `http://localhost:20011/editor`
-- Viewer: `http://localhost:20011/viewer`
+- Editor: `http://localhost:3000/editor`
+- Viewer: `http://localhost:3000/viewer`
 
 Set these before real use:
 

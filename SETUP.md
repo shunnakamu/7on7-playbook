@@ -33,10 +33,10 @@ npm start
 
 5. Open:
 
-- Editor: `http://localhost:20011/editor`
-- Viewer: `http://localhost:20011/viewer`
+- Editor: `http://localhost:3000/editor`
+- Viewer: `http://localhost:3000/viewer`
 
-If `certs/cert.pem` and `certs/key.pem` exist, the app also starts HTTPS on `https://localhost:20010`.
+If `certs/cert.pem` and `certs/key.pem` exist, the app also starts HTTPS on `https://localhost:3443`.
 
 ## Docker run
 
@@ -50,8 +50,8 @@ docker compose up -d --build
 
 4. Open:
 
-- Editor: `http://localhost:20011/editor`
-- Viewer: `http://localhost:20011/viewer`
+- Editor: `http://localhost:3000/editor`
+- Viewer: `http://localhost:3000/viewer`
 
 The compose file mounts:
 - `./playbook.db` into the container database path
@@ -66,6 +66,6 @@ Place these files before starting the app:
 
 Optional env:
 
-- `PUBLIC_HTTPS_URL=https://your-hostname:20010`
+- `PUBLIC_HTTPS_URL=https://your-hostname:3443`
 
 If the cert files are missing, the app still runs on HTTP.

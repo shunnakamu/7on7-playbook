@@ -6,8 +6,8 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const app = express();
-const HTTP_PORT = process.env.HTTP_PORT || process.env.PORT || 20011;
-const HTTPS_PORT = process.env.HTTPS_PORT || 20010;
+const HTTP_PORT = process.env.HTTP_PORT || process.env.PORT || 3000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 const VIEWER_PASSWORD = process.env.VIEWER_PASSWORD || 'playbook';
 const EDITOR_PASSWORD = process.env.EDITOR_PASSWORD || 'playbook-edit';
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'playbook.db');

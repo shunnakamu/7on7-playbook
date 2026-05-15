@@ -2,8 +2,8 @@ services:
   playbook:
     build: .
     ports:
-      - "${HTTPS_PORT:-20010}:${HTTPS_PORT:-20010}"
-      - "${HTTP_PORT:-20011}:${HTTP_PORT:-20011}"
+      - "${HTTPS_PORT:-3443}:${HTTPS_PORT:-3443}"
+      - "${HTTP_PORT:-3000}:${HTTP_PORT:-3000}"
     volumes:
       - ./playbook.db:/app/data/playbook.db
       - ./certs:/app/certs:ro
