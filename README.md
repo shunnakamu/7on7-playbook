@@ -14,6 +14,8 @@
 
 7on7 Playbook is a browser-based coaching tool for building passing game installs, defensive calls, and player-facing viewer pages without switching between whiteboards, slides, and PDFs.
 
+It was originally built to support 7-on-7 coaching workflows used for Prosper Youth Sports rulesets.
+
 ## Why This Exists
 
 Most playbook tools are either too generic or too static. This app is built for the actual coaching loop:
