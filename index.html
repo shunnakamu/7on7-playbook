@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7on7 Playbook</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Toolbar -->
+    <div id="toolbar">
+      <div class="toolbar-group">
+        <button id="btn-new-play" title="New Play">+ New</button>
+        <button id="btn-duplicate" title="Duplicate Play">Dup</button>
+        <button id="btn-delete-play" title="Delete Play">Del</button>
+        <button id="btn-undo" title="Undo (Ctrl+Z)" disabled>Undo</button>
+        <button id="btn-redo" title="Redo (Ctrl+Y)" disabled>Redo</button>
+      </div>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-group">
+        <button id="btn-move" class="tool-btn active" title="Move (M)">Move</button>
+        <button id="btn-route" class="tool-btn offense-only" title="Route (R) &#10;During drawing: press T to switch to Motion">Route</button>
+        <button id="btn-motion" class="tool-btn offense-only" title="Motion (T) &#10;During drawing: press R to switch to Route">Motion</button>
+        <button id="btn-zone" class="tool-btn defense-only" title="Assign Zone (Z)">Zone</button>
+        <button id="btn-eraser" class="tool-btn" title="Eraser (E)">Eraser</button>
+        <button id="btn-swap" class="tool-btn offense-only" title="Swap (S) &#10;Click two players to swap positions">Swap</button>
+      </div>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-group">
+        <label class="offense-only">Route:
+          <select id="route-style">
+            <option value="solid">Solid</option>
+            <option value="dashed">Dashed</option>
+          </select>
+        </label>
+        <label class="defense-only">Coverage:
+          <select id="coverage-select">
+            <option value="">None</option>
+            <option value="cover1">Cover 1 (Man Free)</option>
+            <option value="cover2">Cover 2 (5U/2D)</option>
+            <option value="cover2man">Cover 2 Man (5U/2D)</option>
+            <option value="cover3">Cover 3 (4U/3D)</option>
+            <option value="cover3sky">Cover 3 Sky (4U/3D)</option>
+            <option value="cover4">Cover 4 (3U/4D)</option>
+            <option value="cover6">Cover 6 (Hybrid)</option>
+            <option value="custom" disabled>Custom</option>
+          </select>
+        </label>
+        <button id="btn-add-offense" class="offense-only" title="Add Offense">+O</button>
+        <button id="btn-add-defense" title="Add Defense">+D</button>
+        <button id="btn-clear" title="Clear All">Clear</button>
+      </div>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-group">
+        <input type="text" id="play-name" placeholder="Play name..." value="Play 1">
+        <select id="formation-select" class="offense-only"></select>
+        <button id="btn-save-formation" class="offense-only" title="Save current formation">Save F</button>
+        <button id="btn-manage-formations" class="offense-only" title="Manage formations">Edit F</button>
+        <button id="btn-apply-formation-all" class="offense-only" title="Apply positions to all plays with this formation">Apply All</button>
+        <button id="btn-split-formation" class="offense-only" title="Split formation into groups for separate play design">Split</button>
+        <select id="def-formation-select" class="defense-only"></select>
+      </div>
+      <div class="toolbar-right">
+        <button id="btn-animate" title="Animate (Space)">&#9654; Play</button>
+        <button id="btn-share" title="Share URL">Share</button>
+        <button id="btn-print" title="Print">Print</button>
+        <button id="btn-publish" title="Publish to Viewer" style="background:#2d6a4f;border-color:#2d6a4f;font-weight:bold;">Publish</button>
+        <span id="help-icon">?<div id="help-tooltip"><b>Shortcuts</b>
+M — Move mode
+R — Route mode
+T — Motion mode
+E — Eraser mode
+S — Swap mode (Offense)
+Z — Zone mode (Defense)
+Space — Play/Stop animation
+Del — Delete hovered route
+
+<b>Drawing Routes</b>
+Click player → click waypoints
+→ double-click to finish
+
+<b>Motion (pre-snap)</b>
+While drawing: T=motion(wavy)
+R=route(straight)
+Status bar shows current mode
+
+<b>Edit Existing Route</b>
+Move mode → hover route
+→ drag waypoints to reposition
+Right-click waypoint → Toggle Motion/Route
+Right-click route → Delete
+
+<b>Curved Routes</b>
+Move mode → drag ◇ handle</div></span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main">
+      <!-- Sidebar: Play list -->
+      <div id="sidebar">
+        <div id="playbook-tabs">
+          <button id="tab-offense" class="pb-tab active">OFFENSE</button>
+          <button id="tab-defense" class="pb-tab">DEFENSE</button>
+        </div>
+        <ul id="play-list"></ul>
+        <div id="todo-section">
+          <h3 id="todo-header">TODO</h3>
+          <div id="todo-add">
+            <input type="text" id="todo-input" placeholder="Add new TODO...">
+            <button id="btn-add-todo">+</button>
+          </div>
+          <ul id="todo-list"></ul>
+        </div>
+      </div>
+
+      <!-- Canvas Area -->
+      <div id="canvas-area">
+        <canvas id="field-canvas"></canvas>
+        <!-- Zone Picker Popup (defense mode) -->
+        <div id="zone-picker" style="display:none;"></div>
+        <!-- Waypoint Picker Popup (offense mode) -->
+        <div id="waypoint-picker" style="display:none;"></div>
+        <div id="status-bar">
+          <span id="status-mode">Mode: Move</span>
+          <span id="status-info"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div id="share-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <h3>Share Playbook</h3>
+      <p>Send this URL to your teammates:</p>
+      <textarea id="share-url" rows="3" readonly></textarea>
+      <div class="modal-actions">
+        <button id="btn-copy-url">Copy URL</button>
+        <button id="btn-close-modal" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Formation Modal -->
+  <div id="save-formation-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <h3>Save Formation</h3>
+      <p>Save current positions as a formation template:</p>
+      <input type="text" id="formation-name-input" placeholder="Formation name..." style="width:100%;padding:8px;border:1px solid #0f3460;border-radius:4px;background:#1a1a2e;color:#e0e0e0;font-size:13px;">
+      <div class="modal-actions">
+        <button id="btn-confirm-save-formation" style="background:#2d6a4f;color:#fff;">Save</button>
+        <button id="btn-cancel-save-formation" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manage Formations Modal -->
+  <div id="manage-formations-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <h3>Manage Formations</h3>
+      <div id="formation-list"></div>
+      <div class="modal-actions">
+        <button id="btn-close-manage-formations" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply Formation to All Modal -->
+  <div id="apply-formation-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <h3>Apply Formation to All Plays</h3>
+      <p id="apply-formation-msg"></p>
+      <div class="modal-actions">
+        <button id="btn-confirm-apply-formation" style="background:#2d6a4f;color:#fff;">Apply</button>
+        <button id="btn-cancel-apply-formation" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Play Formation Picker Modal -->
+  <div id="new-play-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <h3>New Play - Select Formation</h3>
+      <div id="new-play-formation-grid"></div>
+      <div class="modal-actions">
+        <button id="btn-cancel-new-play" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Split Formation Modal -->
+  <div id="split-formation-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <h3 id="split-modal-title">Split Formation</h3>
+      <div id="split-groups-config">
+        <div class="split-group-row">
+          <label>Group 1:</label>
+          <input type="text" id="split-group1-name" placeholder="e.g. X side" style="width:80px;padding:4px;border:1px solid #0f3460;border-radius:4px;background:#1a1a2e;color:#e0e0e0;font-size:12px;">
+          <div id="split-group1-positions" class="split-positions"></div>
+        </div>
+        <div class="split-group-row">
+          <label>Group 2:</label>
+          <input type="text" id="split-group2-name" placeholder="e.g. Bunch side" style="width:80px;padding:4px;border:1px solid #0f3460;border-radius:4px;background:#1a1a2e;color:#e0e0e0;font-size:12px;">
+          <div id="split-group2-positions" class="split-positions"></div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:#888;margin:8px 0 0;">Click positions to toggle between groups. QB is always shown in both.</p>
+      <div class="modal-actions">
+        <button id="btn-confirm-split" style="background:#2d6a4f;color:#fff;">Save Split</button>
+        <button id="btn-remove-split" style="background:#c0392b;color:#fff;display:none;">Remove Split</button>
+        <button id="btn-cancel-split" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Split Group Picker (shown when creating new play for split formation) -->
+  <div id="split-group-picker-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <h3>Select Group</h3>
+      <div id="split-group-picker-grid"></div>
+      <div class="modal-actions">
+        <button id="btn-cancel-split-group-picker" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Area (hidden on screen) -->
+  <div id="print-area"></div>
+
+  <script src="render.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

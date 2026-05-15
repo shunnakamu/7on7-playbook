@@ -1,0 +1,8 @@
+node_modules
+.git
+.env
+tools/token_sheets.json
+tools/client_secret.json
+certs/*.pem
+playbook.db-shm
+playbook.db-wal

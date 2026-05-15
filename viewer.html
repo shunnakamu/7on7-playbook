@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7on7 Playbook - Viewer</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Viewer-specific overrides */
+    #toolbar .toolbar-group button { pointer-events: auto; }
+    #todo-section { display: none; }
+    #status-bar #status-mode { display: none; }
+    #play-list li { cursor: pointer; }
+    #play-list li:hover { background: rgba(77,150,255,0.15); }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Toolbar -->
+    <div id="toolbar">
+      <div class="toolbar-group">
+        <span style="font-weight:bold;color:#e94560;font-size:13px;padding:0 8px;">7on7 PLAYBOOK</span>
+      </div>
+      <div class="toolbar-right">
+        <button id="btn-animate" title="Animate (Space)">&#9654; Play</button>
+        <button id="btn-print" title="Print">Print</button>
+        <span id="version-info" style="font-size:10px;color:#888;padding:0 8px;"></span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main">
+      <!-- Sidebar: Play list -->
+      <div id="sidebar">
+        <div id="playbook-tabs">
+          <button id="tab-offense" class="pb-tab active">OFFENSE</button>
+          <button id="tab-defense" class="pb-tab">DEFENSE</button>
+        </div>
+        <ul id="play-list"></ul>
+      </div>
+
+      <!-- Canvas Area -->
+      <div id="canvas-area">
+        <canvas id="field-canvas"></canvas>
+        <div id="status-bar">
+          <span id="play-title" style="font-weight:bold;color:#e0e0e0;"></span>
+          <span id="status-info"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="print-area"></div>
+  <script src="render.js"></script>
+  <script src="viewer.js"></script>
+</body>
+</html>

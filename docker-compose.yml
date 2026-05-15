@@ -1,0 +1,14 @@
+services:
+  playbook:
+    build: .
+    ports:
+      - "${HTTPS_PORT:-20010}:${HTTPS_PORT:-20010}"
+      - "${HTTP_PORT:-20011}:${HTTP_PORT:-20011}"
+    volumes:
+      - ./playbook.db:/app/data/playbook.db
+      - ./certs:/app/certs:ro
+    env_file:
+      - .env
+    environment:
+      - DB_PATH=/app/data/playbook.db
+    restart: unless-stopped
